@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <!-- Header info -->
     <header>
       <h1>Welcome to Filmpicker!</h1>
       <nav>
@@ -17,6 +18,8 @@
         </ul>
       </nav>
     </header>
+
+    <!-- About section -->
     <section id="about">
       <h2>About the App</h2>
       <p>
@@ -24,13 +27,31 @@
         favorite movie to get started!
       </p>
       <p>
-        Note, enter your movie choice in the following format, including its
-        year of release: Terminator, The (1984)
+        Note: Please enter your movie choice in the format seen below, followed
+        by its year of release
       </p>
       <div>
-        <!-- <input type="text" /> -->
+        <input
+          type="text"
+          id="movie-input"
+          placeholder="Terminator, The (1984)"
+        />
+        <button id="submit-btn">Generate!</button>
       </div>
     </section>
+
+    <!-- Container for Movie Recommendations -->
+    <section>
+      <h2>Your Recommendations</h2>
+      <div id="movies-container">
+        <!-- Movie elements will be injected here via JS -->
+      </div>
+    </section>
+
+    <!-- Webpage footer -->
+    <footer>
+      <p>© 2024 Filmpicker - Movie Recommendations App. All rights reserved.</p>
+    </footer>
     <script src="js/app.js"></script>
   </body>
 </html>

@@ -1,12 +1,20 @@
 document.addEventListener('DOMContentLoaded', (e) => {
   console.log('Document is fully loaded and parsed');
 
-  const interfaceWindow = document.getElementById('interface-window');
+  // grabbing a few HTML elements by their designated id to store in JS variables
+  const submitBtn = document.getElementById('submit-btn');
+  const movieInput = document.getElementById('movie-input');
+  const moviesContainer = document.getElementById('movies-container');
 
-  interfaceWindow.append;
+  submitBtn.addEventListener('click', (e) => {
+    // Prevent default functionality for screen refresh upon click
+    e.preventDefault();
 
-  for (let i = 0; i < 10; i++) {}
-  document.addEventListener('click', (e) => {
-    console.log('page clicked');
+    // Grab the user-entered value in the movie-input element
+    const userInput = movieInput.value;
+
+    if (userInput.trim() !== '') {
+      fetch('http://localhost:80/recommendations');
+    }
   });
 });
