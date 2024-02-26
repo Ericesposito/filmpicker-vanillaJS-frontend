@@ -1,61 +1,91 @@
-document.addEventListener('DOMContentLoaded', (e) => {
-  console.log('Document is fully loaded and parsed');
+let moviesData = []; // This will store the fetched movies data
+let titles = []; // To store just the titles for the autocomplete
 
-  // grabbing a few HTML elements by their designated id to store in JS variables
-  const submitBtn = document.getElementById('submit-btn');
-  const movieInput = document.getElementById('movie-input');
-  const moviesContainer = document.getElementById('movies-container');
+function fetchMoviesData() {
+  fetch('../assets/movies.json')
+    .then((response) => response.json())
+    .then((data) => {
+      moviesData = data; // Store the full movies data
+      titles = moviesData.map((movie) => movie.title); // Extract titles for autocomplete
+      console.log('Titles for autocomplete:', titles);
+      console.log('MoviesData: ', moviesData);
+    })
+    .catch((error) => console.error('Failed to load movies data:', error));
+}
 
-  submitBtn.addEventListener('click', (e) => {
-    // Prevent default functionality for screen refresh upon click
-    e.preventDefault();
+document.addEventListener('DOMContentLoaded', () => {
+  const inputBox = document.querySelector('#input-box');
+  const resultsList = document.querySelector('#autocomplete-results');
+  const submitBtn = document.querySelector('#generate-btn');
+  const recommendationsContainer = document.querySelector('#movies-container');
+  const recommendationsTitle = document.querySelector('#recommendations-title');
+  const clearBtn = document.querySelector('#clear-btn');
 
-    // Grab the user-entered value in the movie-input element
-    const userInput = movieInput.value;
+  fetchMoviesData();
 
-    // Ensure user has entered valid data
-    if (userInput.trim() !== '') {
-      fetch('http://localhost:80/recommendations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          favorite_movie: userInput,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // console.log(data);
-          populateMovies(data['movie_recs']);
-        })
-        .catch((err) => {
-          console.log('Error:', err);
+  // Autocomplete functionality
+  inputBox.addEventListener('input', () => {
+    const inputValue = inputBox.value.trim().toLowerCase();
+    resultsList.innerHTML = ''; // Clear previous suggestions
+    if (inputValue) {
+      const filteredTitles = titles.filter((title) =>
+        title.toLowerCase().includes(inputValue)
+      );
+      filteredTitles.forEach((title) => {
+        const li = document.createElement('li');
+        li.textContent = title;
+        li.addEventListener('click', () => {
+          inputBox.value = title; // Fill input box with clicked title
+          resultsList.innerHTML = ''; // Clear suggestions
         });
-    } else {
-      alert('Please enter a movie name!');
+        resultsList.appendChild(li);
+      });
     }
   });
 
-  function populateMovies(movies) {
-    // Clear current container of movies
-    moviesContainer.innerHTML = '';
+  // Submit functionality
+  submitBtn.addEventListener('click', () => {
+    recommendationsContainer.innerHTML = ''; // Clear displayed recommendations
+    recommendationsTitle.style.display = 'none';
+    const movieTitle = inputBox.value.trim();
+    if (movieTitle) {
+      fetchRecommendations(movieTitle);
+    } else {
+      alert('Please enter a movie title.');
+    }
+  });
 
-    console.log(movies);
+  function fetchRecommendations(movieTitle) {
+    // Example POST request to fetch recommendations
+    // Replace URL and adjust POST body and response handling as necessary
+    console.log(`Fetching recommendations for: ${movieTitle}`);
+    fetch('http://localhost:80/recommendations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        favorite_movie: movieTitle,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        data.movie_recs.forEach((movie) => {
+          const movieElement = document.createElement('div');
 
-    // Loop through obtained list of movies and populate an element for each
-    movies.forEach((movie) => {
-      // Creating an HTML element for each movie
-      const movieElement = document.createElement('div');
-
-      // Populating element HTML with dynamic data obtained
-      movieElement.innerHTML = `
-      <h3>${movie.title}</h3>
-      <img src="${movie.poster}" alt="${movie.title}">
-      <p>${movie.description}</p>
-      `;
-
-      moviesContainer.appendChild(movieElement);
-    });
+          movieElement.innerHTML = `
+          <h3>${movie}</h3>
+          `;
+          recommendationsContainer.appendChild(movieElement);
+        });
+      });
+    // Display logic for recommendations goes here...
   }
+
+  // Clear functionality
+  clearBtn.addEventListener('click', () => {
+    inputBox.value = ''; // Clear input box
+    recommendationsContainer.innerHTML = ''; // Clear displayed recommendations
+    recommendationsTitle.style.display = 'none';
+  });
 });

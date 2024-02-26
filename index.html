@@ -20,7 +20,7 @@
     </header>
 
     <!-- About section -->
-    <section id="about">
+    <section id="about" class="autocomplete">
       <h2>About the App</h2>
       <p>
         This app provides personalized movie recommendations. Just enter your
@@ -30,20 +30,24 @@
         Note: Please enter your movie choice in the format seen below, followed
         by its year of release
       </p>
-      <div>
+      <form id="movie-form">
         <input
           type="text"
-          id="movie-input"
-          placeholder="Terminator, The (1984)"
+          id="input-box"
+          placeholder="Enter your favorite movie"
         />
-        <button id="submit-btn">Generate!</button>
-      </div>
+        <ul id="autocomplete-results" class="autocomplete-results"></ul>
+      </form>
+      <button id="generate-btn" class="button">
+        Generate Recommendations!
+      </button>
+      <button id="clear-btn" class="button">Clear</button>
     </section>
 
     <!-- Container for Movie Recommendations -->
     <section>
-      <h2>Your Recommendations</h2>
-      <div id="movies-container">
+      <h2 id="recommendations-title">Your Recommendations</h2>
+      <div id="movies-container" class="container">
         <!-- Movie elements will be injected here via JS -->
       </div>
     </section>
