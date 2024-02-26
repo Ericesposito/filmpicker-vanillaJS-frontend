@@ -13,8 +13,49 @@ document.addEventListener('DOMContentLoaded', (e) => {
     // Grab the user-entered value in the movie-input element
     const userInput = movieInput.value;
 
+    // Ensure user has entered valid data
     if (userInput.trim() !== '') {
-      fetch('http://localhost:80/recommendations');
+      fetch('http://localhost:80/recommendations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          favorite_movie: userInput,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data);
+          populateMovies(data['movie_recs']);
+        })
+        .catch((err) => {
+          console.log('Error:', err);
+        });
+    } else {
+      alert('Please enter a movie name!');
     }
   });
+
+  function populateMovies(movies) {
+    // Clear current container of movies
+    moviesContainer.innerHTML = '';
+
+    console.log(movies);
+
+    // Loop through obtained list of movies and populate an element for each
+    movies.forEach((movie) => {
+      // Creating an HTML element for each movie
+      const movieElement = document.createElement('div');
+
+      // Populating element HTML with dynamic data obtained
+      movieElement.innerHTML = `
+      <h3>${movie.title}</h3>
+      <img src="${movie.poster}" alt="${movie.title}">
+      <p>${movie.description}</p>
+      `;
+
+      moviesContainer.appendChild(movieElement);
+    });
+  }
 });
