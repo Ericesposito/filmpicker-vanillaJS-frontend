@@ -13,6 +13,17 @@ function fetchMoviesData() {
     .catch((error) => console.error('Failed to load movies data:', error));
 }
 
+function getMovieDetailsByTitle(title) {
+  const movie = moviesData.find((movie) => movie.title === title);
+  if (movie) {
+    console.log('Movie details:', movie);
+    // Here you can use the detailed movie information as needed
+  } else {
+    console.log('Movie not found');
+  }
+}
+//  NEXT THING IS TO TAKE THIS DATA AND POPULATE THE FOREACH LOOP BELOW
+
 document.addEventListener('DOMContentLoaded', () => {
   const inputBox = document.querySelector('#input-box');
   const resultsList = document.querySelector('#autocomplete-results');
